@@ -390,7 +390,7 @@ export default {
         origin: '*',
       };
       const tableBeginning = '===Table===';
-      const tableEnd = '== Armor penetration and damage graph ==';
+      // const tableEnd = '== Armor penetration and damage graph ==';
 
       console.log(`URL should be :${ENDPOINT}${this.paramsAsURI(options)}`);
       const URI = `${ENDPOINT}${this.paramsAsURI(options)}`;
@@ -399,13 +399,14 @@ export default {
       console.log('Fetch should be completed');
 
       res = await res.json();
-      console.log(res);
+      //  console.log(res);
       // .then((res) => res.json())
 
       const text = res.query.pages[0].revisions[0].slots.main.content;
       const tablePos = text.search(tableBeginning);
-      const endPos = text.search(tableEnd);
-      const tableWithIntro = text.substring(tablePos, endPos);
+      //  const endPos = text.search(tableEnd);
+      const tableWithIntro = text.substring(tablePos, text.length);
+      console.log(tablePos, text.length);
 
       //  console.log(tableWithIntro);
       // lines with rowspan 5 == ammo category
@@ -414,9 +415,9 @@ export default {
 
       const lines = tableWithIntro.split('\n');
       // const sanitized = {};
-
+      console.log(tableWithIntro);
       const size = lines.length;
-      console.log(`text is ${lines}long`);
+      // console.log(`text is ${lines}long`);
       // const omegalul = /\|\[\[(\w+\.*\|*\w+\.*\s*\w+\/*\w+\s*\w+-*\w+)|(\.\d+\s*\w+)/i;
       // Yoink categories:
       // every category will match the regexp finding rowspan and will have
@@ -432,18 +433,18 @@ export default {
       for (let i = 0; i < size; i += 1) {
         // If we are on a 'weapon line'
         const dank = lines[i].match(supaRegEx);
-        if (dank !== undefined) {
+        if (dank !== undefined && dank != null) {
           // if we can read next line && it matches
           // regex again, it means we have found the category
 
           //    console.log(match);
           if (i + 6 <= size) {
             const match = lines[i + 1].match(supaRegEx);
-
+            console.log(dank);
             // idk why this match is sometimes truthy when it shouldn't be
             if (match !== undefined && match != null) {
               previous = dank?.[2] || dank?.[4] || previous;
-              console.log('peenus');
+              console.log(`peenus${previous}`);
               // or this:
               // previous = dank[2] ?? dank[4] ?? previous
               // OMEGALUL Clap. ?? will return LHS if falsy but not undefined or null
@@ -451,7 +452,6 @@ export default {
               // feelsdankman ffs
               // console.log(previous);
             } else {
-              console.log('donkies');
               // next line is NOT another weapon so it is surely stats for the 'last' wweapon
               const ammo = dank?.[2];
               if (ammo != null || ammo !== undefined) {
@@ -468,10 +468,9 @@ export default {
           }
         }
       }
-      console.log(data);
 
       // this.changeSeries('fleshDamage', 'penetration');
-      return data;
+      return new Promise((resolve) => resolve(data));
       // .catch((err) => console.log(err));
     },
   },
