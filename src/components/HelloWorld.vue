@@ -395,6 +395,8 @@ export default {
       console.log(`URL should be :${ENDPOINT}${this.paramsAsURI(options)}`);
       const URI = `${ENDPOINT}${this.paramsAsURI(options)}`;
       let res = await fetch(URI, { method: 'get' });
+      console.log('Fetch should be completed');
+
       res = await res.json();
       // .then((res) => res.json())
 
@@ -460,7 +462,7 @@ export default {
           }
         }
       }
-      // console.log(data);
+      console.log(data);
 
       // this.changeSeries('fleshDamage', 'penetration');
       return data;
