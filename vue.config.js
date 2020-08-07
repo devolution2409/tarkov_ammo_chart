@@ -1,5 +1,5 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/tarkov-ammo-chart/dist/'
+    ? '/tarkov_ammo_chart/'
     : '/',
 };
