@@ -398,6 +398,7 @@ export default {
       console.log('Fetch should be completed');
 
       res = await res.json();
+      console.log(res);
       // .then((res) => res.json())
 
       const text = res.query.pages[0].revisions[0].slots.main.content;
