@@ -394,6 +394,7 @@ export default {
 
       console.log(`URL should be :${ENDPOINT}${this.paramsAsURI(options)}`);
       const URI = `${ENDPOINT}${this.paramsAsURI(options)}`;
+
       let res = await fetch(URI, { method: 'get' });
       console.log('Fetch should be completed');
 
@@ -415,6 +416,7 @@ export default {
       // const sanitized = {};
 
       const size = lines.length;
+      console.log(`text is ${lines}long`);
       // const omegalul = /\|\[\[(\w+\.*\|*\w+\.*\s*\w+\/*\w+\s*\w+-*\w+)|(\.\d+\s*\w+)/i;
       // Yoink categories:
       // every category will match the regexp finding rowspan and will have
@@ -423,6 +425,7 @@ export default {
       const supaRegEx = /rowspan="(\d+)".+\[\[(.+)]]|\[\[(.+)]]|rowspan="\d+" \|(.+)/;
 
       let previous;
+
       /*eslint-disable */
           let data = {};
           /* eslint-enable */
@@ -440,6 +443,7 @@ export default {
             // idk why this match is sometimes truthy when it shouldn't be
             if (match !== undefined && match != null) {
               previous = dank?.[2] || dank?.[4] || previous;
+              console.log('peenus');
               // or this:
               // previous = dank[2] ?? dank[4] ?? previous
               // OMEGALUL Clap. ?? will return LHS if falsy but not undefined or null
@@ -447,6 +451,7 @@ export default {
               // feelsdankman ffs
               // console.log(previous);
             } else {
+              console.log('donkies');
               // next line is NOT another weapon so it is surely stats for the 'last' wweapon
               const ammo = dank?.[2];
               if (ammo != null || ammo !== undefined) {
