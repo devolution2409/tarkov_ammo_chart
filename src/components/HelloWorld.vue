@@ -1,8 +1,39 @@
 <template>
-  <div class="container"> <div>TODO: find out undefined ??</div>
+  <div class="container">
+    <!-- div>TODO: find out undefined ??</div> -->
       <div id="chart" v-if="loading == false">
+        <div class="md-layout">
+          <md-field class="md-layout-item">
+            <label for="xAxis">X Axis</label>
+            <md-select v-model="x" name="xAxis" id="xAxis">
+              <md-option disabled value="">Select x axis</md-option>
+              <md-option value="fleshDamage">Flesh Damage</md-option>
+              <md-option value="penetration">Penetration</md-option>
+              <md-option value="armorDamagePercent">Armor Damage %</md-option>
+              <md-option value="accuracyModifier">Accuracy Modifier %</md-option>
+              <md-option value="recoilModifier">Recoil Modifier %</md-option>
+              <md-option value="fragmentationChance">Fragmentation Chance %</md-option>
+            </md-select>
+          </md-field>
+          <md-field class="md-layout-item">
+            <label for="yAxis">Y Axis</label>
+            <md-select v-model="y" name="yAxis" id="yAxis">
+              <md-option disabled value="">Select y axis</md-option>
+              <md-option value="fleshDamage">Flesh Damage</md-option>
+              <md-option value="penetration">Penetration</md-option>
+              <md-option value="armorDamagePercent">Armor Damage %</md-option>
+              <md-option value="accuracyModifier">Accuracy Modifier %</md-option>
+              <md-option value="recoilModifier">Recoil Modifier %</md-option>
+              <md-option value="fragmentationChance">Fragmentation Chance %</md-option>
+          </md-select>
+        </md-field>
+        </div>
         <!-- i actually have no idea why we put 700% and not 100% This shit is rarted -->
-        <apexchart   type="scatter" :options="options" height="700%" :series="series"></apexchart>
+          <apexchart class="dank"
+                    type="scatter"
+                    :options="options"
+                    height="500%"
+                    :series="series"></apexchart>
       </div>
       <div v-if="loading == true" class="lds-dual-ring"></div>
 
@@ -59,37 +90,6 @@ export default {
       if (!valid.includes(x) || !valid.includes(y)) { return 1; }
       const seriesDank = [];
       Object.keys(this.ammoData).forEach((key) => {
-        // here, key is ammo category
-        // 12x70mm|12/70 shot
-        // 12x70mm|12/70 slugs
-        // 20x70mm
-        // 9x18mm Makarov
-        // 7.62x25mm Tokarev
-        // 9x19mm Parabellum
-        // .45 ACP
-        // 9x21mm Gyurza
-        // 5.7x28mm FN
-        // 4.6x30mm HK
-        // 9x39mm
-        // .366 TKM
-        // 5.45x39mm
-        // 5.56x45mm NATO
-        // 7.62x39mm
-        // 7.62x51mm NATO
-        // 7.62x54mmR
-        // 12.7x55mm STs-130
-        // console.log(key);// , this.ammoData[key]);
-
-        // INDIVIDUALLY EACH AMMO FEELS MEGADANKMAN
-
-        // Object.keys(this.ammoData[key]).forEach((k) => {
-        //   series.push({
-        //     name: k,
-        //     data: [[this.ammoData[key][k][x], this.ammoData[key][k][y]]],
-        //   });
-        // });
-
-        // GROUP AMMO OF SAME CALIBER pajaDnak
         const dank = [];
         Object.keys(this.ammoData[key]).forEach((k) => {
           dank.push([this.ammoData[key][k][x], this.ammoData[key][k][y]]);
@@ -101,7 +101,6 @@ export default {
         });
       });
       this.series = seriesDank;
-      // idk why tooltip loses context
 
       const chartOptions = {
         annotations: {
@@ -110,7 +109,7 @@ export default {
           borderWidth: 1,
           borderRadius: 2,
           textAnchor: 'end',
-          position: 'right',
+          // position: 'front', // right
           offsetX: 0,
           offsetY: +15,
           style: {
@@ -138,7 +137,83 @@ export default {
 
       };
 
+      // idk why tooltip loses context
       const that = this;
+
+      // idk kev find a way to refactor? FeelsDankMan
+      // if this is penetration we should shwo the armor overlays
+      if (y === 'penetration') {
+        chartOptions.annotations.yaxis = [
+          {
+            y: 0,
+            y2: 10,
+            fillColor: '#ff1744',
+            label: {
+              text: 'Flesh',
+              ...chartOptions.annotations,
+            },
+
+          },
+          {
+            y: 10,
+            y2: 20,
+            fillColor: '#ff3d00',
+            label: {
+              text: 'Class 1',
+              ...chartOptions.annotations,
+            },
+          },
+          {
+            y: 20,
+            y2: 30,
+            fillColor: '#ff9100',
+            label: {
+              text: 'Class 2',
+              ...chartOptions.annotations,
+            },
+          },
+          {
+            y: 30,
+            y2: 40,
+            fillColor: '#ffea00',
+            label: {
+              text: 'Class 3',
+              ...chartOptions.annotations,
+            },
+          },
+          {
+            y: 40,
+            y2: 50,
+            fillColor: '#76ff03',
+            label: {
+              text: 'Class 4',
+              ...chartOptions.annotations,
+            },
+          },
+          {
+            y: 50,
+            y2: 60,
+            fillColor: '#00e676',
+
+            label: {
+              text: 'Class 5',
+              ...chartOptions.annotations,
+            },
+          },
+          {
+            y: 60,
+            y2: 100,
+            fillColor: '#00e5ff',
+            label: {
+              text: 'Class 6',
+              ...chartOptions.annotations,
+              offsetY: -150,
+            },
+          },
+        ];
+      } else {
+        chartOptions.annotations.yaxis = [];
+      }
 
       // SPREAD
       this.options = {
@@ -201,7 +276,7 @@ export default {
             return text;
           },
         },
-        height: '100%',
+        //  height: '100%',
         /* eslint-enable */
 
         // theme: {
@@ -248,75 +323,7 @@ export default {
           },
         },
         annotations: {
-          position: 'back',
-          yaxis: [
-            {
-              y: 0,
-              y2: 10,
-              fillColor: '#ff1744',
-              label: {
-                text: 'Flesh',
-                ...chartOptions.annotations,
-              },
-
-            },
-            {
-              y: 10,
-              y2: 20,
-              fillColor: '#ff3d00',
-              label: {
-                text: 'Class 1',
-                ...chartOptions.annotations,
-              },
-            },
-            {
-              y: 20,
-              y2: 30,
-              fillColor: '#ff9100',
-              label: {
-                text: 'Class 2',
-                ...chartOptions.annotations,
-              },
-            },
-            {
-              y: 30,
-              y2: 40,
-              fillColor: '#ffea00',
-              label: {
-                text: 'Class 3',
-                ...chartOptions.annotations,
-              },
-            },
-            {
-              y: 40,
-              y2: 50,
-              fillColor: '#76ff03',
-              label: {
-                text: 'Class 4',
-                ...chartOptions.annotations,
-              },
-            },
-            {
-              y: 50,
-              y2: 60,
-              fillColor: '#00e676',
-
-              label: {
-                text: 'Class 5',
-                ...chartOptions.annotations,
-              },
-            },
-            {
-              y: 60,
-              y2: 100,
-              fillColor: '#00e5ff',
-              label: {
-                text: 'Class 6',
-                ...chartOptions.annotations,
-                offsetY: -150,
-              },
-            },
-          ],
+          ...chartOptions.annotations,
         },
       };
 
@@ -329,6 +336,8 @@ export default {
       loading: true,
       options: {},
       series: [],
+      x: 'fleshDamage',
+      y: 'penetration',
 
       // ammoData: {},
     };
@@ -341,6 +350,16 @@ export default {
       if (val instanceof Object && this.loading === false) {
         this.changeSeries('fleshDamage', 'penetration');
       }
+    },
+    x() {
+      this.loading = true;
+      this.changeSeries(this.x, this.y);
+      this.loading = false;
+    },
+    y() {
+      this.loading = true;
+      this.changeSeries(this.x, this.y);
+      this.loading = false;
     },
   },
   computed: {
