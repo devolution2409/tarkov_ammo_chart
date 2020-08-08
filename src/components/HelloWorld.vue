@@ -1,11 +1,11 @@
 <template>
-  <div class="container"> TODO: find out undefined ??
-  <button @click="changeSeries('fleshDamage','penetration')"> ppHop</button>
-
-      <div id="chart" >
+  <div class="container"> <div>TODO: find out undefined ??</div>
+      <div id="chart" v-if="loading == false">
         <!-- i actually have no idea why we put 700% and not 100% This shit is rarted -->
-        <apexchart  type="scatter" :options="options" height="700%" :series="series"></apexchart>
+        <apexchart   type="scatter" :options="options" height="700%" :series="series"></apexchart>
       </div>
+      <div v-if="loading == true" class="lds-dual-ring"></div>
+
   </div>
 </template>
 
@@ -103,29 +103,37 @@ export default {
       this.series = seriesDank;
       // idk why tooltip loses context
 
-      const annotationsOptions = {
+      const chartOptions = {
+        annotations: {
 
-        // borderColor: 'red',
-        borderWidth: 1,
-        borderRadius: 2,
-        textAnchor: 'end',
-        position: 'right',
-        offsetX: 0,
-        offsetY: +15,
-        style: {
-          background: 'gray',
+          // borderColor: 'red',
+          borderWidth: 1,
+          borderRadius: 2,
+          textAnchor: 'end',
+          position: 'right',
+          offsetX: 0,
+          offsetY: +15,
+          style: {
+            background: 'gray',
+          },
 
-          // color: '#777',
-          // fontSize: '12px',
-          // fontWeight: 400,
-          // fontFamily: undefined,
-          // cssClass: 'apexcharts-yaxis-annotation-label',
-          // padding: {
-          //   left: 5,
-          //   right: 5,
-          //   top: 0,
-          //   bottom: 2,
-          // },
+        },
+        axis: {
+          show: true,
+          type: 'numeric',
+
+        },
+        axisTitle: {
+          rotate: -90,
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: undefined,
+            fontSize: '16px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 600,
+            cssClass: 'apexcharts-yaxis-title',
+          },
         },
 
       };
@@ -206,43 +214,25 @@ export default {
           // tickAmount: 12,
           title: {
             text: x,
-            rotate: -90,
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              color: undefined,
-              fontSize: '12px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
-            },
+            ...chartOptions.axisTitle,
           },
-          show: true,
+          ...chartOptions.axis,
         },
         yaxis: {
-          type: 'numeric',
           min: 0,
           max: 100,
           // tickAmount: 12,
           title: {
             text: y,
-            rotate: -90,
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              color: undefined,
-              fontSize: '12px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
-            },
+            ...chartOptions.axisTitle,
           },
-          show: true,
+          ...chartOptions.axis,
+
         },
-        legend: {
-          // we can customize the legend here poggies
-          show: true,
-        },
+        // legend: {
+        //   // we can customize the legend here poggies
+        //   show: true,
+        // },
         subtitle: {
           text: '',
           align: 'left',
@@ -263,73 +253,66 @@ export default {
             {
               y: 0,
               y2: 10,
-              borderColor: '#000',
               fillColor: '#ff1744',
               label: {
                 text: 'Flesh',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
 
             },
             {
               y: 10,
               y2: 20,
-              borderColor: '#000',
               fillColor: '#ff3d00',
               label: {
                 text: 'Class 1',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
             },
             {
               y: 20,
               y2: 30,
-              borderColor: '#000',
               fillColor: '#ff9100',
               label: {
                 text: 'Class 2',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
             },
             {
               y: 30,
               y2: 40,
-              borderColor: '#000',
               fillColor: '#ffea00',
               label: {
                 text: 'Class 3',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
             },
             {
               y: 40,
               y2: 50,
-              borderColor: '#000',
               fillColor: '#76ff03',
               label: {
                 text: 'Class 4',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
             },
             {
               y: 50,
               y2: 60,
-              borderColor: '#000',
               fillColor: '#00e676',
 
               label: {
                 text: 'Class 5',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
               },
             },
             {
               y: 60,
               y2: 100,
-              borderColor: '#000',
               fillColor: '#00e5ff',
               label: {
                 text: 'Class 6',
-                ...annotationsOptions,
+                ...chartOptions.annotations,
                 offsetY: -150,
               },
             },
@@ -343,41 +326,29 @@ export default {
   },
   data() {
     return {
-
-      options: {
-        height: '100px',
-        xaxis: {
-          type: 'numeric',
-          min: 0,
-          max: 200,
-          tickAmount: 12,
-        },
-      },
-      /*eslint-disable */
-      series: [{
-        name: 'SAMPLE A',
-        data: [
-          [16.4, 5.4], [21.7, 2], [25.4, 3], [19, 2], [10.9, 1],
-          [13.6, 3.2], [10.9, 7.4], [10.9, 0], [10.9, 8.2]],
-      }, {
-        name: 'SAMPLE B',
-        data: [
-          [36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]],
-      }, {
-        name: 'SAMPLE C',
-        data: [
-          [21.7, 3], [23.6, 3.5], [24.6, 3], [29.9, 3], [21.7, 20], [23, 2], [10.9, 3], [28, 4], [27.1, 0.3], [16.4, 4], [13.6, 0], [19, 5], [22.4, 3], [24.5, 3], [32.6, 3], [27.1, 4], [29.6, 6], [31.6, 8], [21.6, 5], [20.9, 4], [22.4, 0], [32.6, 10.3], [29.7, 20.8], [24.5, 0.8], [21.4, 0], [21.7, 6.9], [28.6, 7.7], [15.4, 0], [18.1, 0], [33.4, 0], [16.4, 0]],
-      }],
-      /* eslint-enable */
+      loading: true,
+      options: {},
+      series: [],
 
       // ammoData: {},
     };
+  },
+  // idk why we have to watch this instead of just using loading,
+  // else 'changeSeries' will be called WAYTOEARLY: BRINGOFWAYTOODANK
+  watch: {
+    ammoData(val) {
+      // check for valid object i guess?
+      if (val instanceof Object && this.loading === false) {
+        this.changeSeries('fleshDamage', 'penetration');
+      }
+    },
   },
   computed: {
 
   },
   asyncComputed: {
     async ammoData() {
+      this.loading = true;
       const ENDPOINT = 'https://escapefromtarkov.gamepedia.com/api.php';
       const options = {
         action: 'query',
@@ -468,7 +439,8 @@ export default {
           }
         }
       }
-
+      //  this.changeSeries('fleshDamage', 'penetration');
+      this.loading = false;
       // this.changeSeries('fleshDamage', 'penetration');
       return new Promise((resolve) => resolve(data));
       // .catch((err) => console.log(err));
@@ -509,6 +481,30 @@ a {
 
 .container{
   height: 90vh;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 </style>
